@@ -15,7 +15,7 @@
 
 (function() {
   'use strict';
-  
+
   function addCssRule(selector, rule) {
     $("head").append("<style>" + selector + " { " + rule + " }</style>");
   };
@@ -25,7 +25,9 @@
   addCssRule('span.shipName'
   , 'font-size: 65%;');
   addCssRule('#SelectLocation .lval > span.raligned, span.raligned'
-  , 'left: auto; right: 7px;');
+  , 'position: absolute; left: auto; right: 6px;');
+  addCssRule('.nativetype'
+  , 'font-size: 11px;');
   addCssRule('div.raligned'
   , 'text-align: right;');
   addCssRule('.lval.halved, #SelectLocation .lval.halved'
@@ -109,7 +111,7 @@
   , 'background-position: 1px -30px;');
   addCssRule('.readyCBmini2'
   , 'background-position: 1px 3px;');
-  
+
   vgapMap.prototype.click = function (e) {
     var shift = e.shiftKey;
     if (vgap.editmode) {
@@ -418,7 +420,7 @@
     }
   };
 
-  
+
   vgaPlanets.prototype.showMore = function (width, pane) {
     if (!this.moreOpen)  this.playSound("fastwoosh");
     vgap.closeScan();
@@ -427,9 +429,9 @@
     $("<div id='morebottom'>OK</div>").tclick(function () { vgap.closeMore(); }).appendTo(this.more);
     $("<div id='tcontrol'/>").appendTo(this.more).hide();
     var wi = 270;                // <--------- Marconius
-    if (width) 
+    if (width)
       wi = width;
-    this.more.width(wi); 
+    this.more.width(wi);
     var left = vgap.lc.width() * vgap.scale;
     if (!vgap.landscape || !vgap.lcOpen) left = 0; //portait
     this.more.css("left", left + "px");
@@ -450,7 +452,7 @@
     if (vgap.assistant)
       vgap.assistant.lastactiontime = Date.now();
   };
-  
+
   function getHullShortName(longName) {
     return ((longName.includes('Class')) ? getShipClassName(longName)
     : ((longName.includes('Freighter')) ? concatFirstLetters(longName)
@@ -494,21 +496,21 @@
         return "<img src='" + planet.img + "' style='top:7px;'/>";
       }
       function addClansQuantityAndDefence() {
-        return "<div class='lval clans' " + (planet.clans <= 0 ? "style='opacity:0.2;'" : "") + ">" 
+        return "<div class='lval clans' " + (planet.clans <= 0 ? "style='opacity:0.2;'" : "") + ">"
         + addCommas(planet.clans * 100) + ' df: ' + gsv(planet.defense) + "</div>";
       }
 
     if (planet.infoturn > 0 || vgap.editmode) {
-      let cash = "<hr/><div class='lval mc'>" + gsv(planet.megacredits) 
-        + " <span>+" + gsv(Math.round(planet.colonisttaxrate * planet.clans / 1000)) 
+      let cash = "<hr/><div class='lval mc'>" + gsv(planet.megacredits)
+        + " <span>+" + gsv(Math.round(planet.colonisttaxrate * planet.clans / 1000))
         + ' (' + planet.colhappychange + ")</span></div>";
-          
+
       if (vgap.gameUsesSupplies())
         html += cash + "<div class='lval supplies'>" + gsv(planet.supplies)
         + " <span>+" + gsv(planet.factories) + "</span></div>";
       else
         html += "<div class='lval'>&nbsp;</div>" + cash;
-          
+
       let drawMineral = function(cls, mineral) {
         let qtty = (planet.groundneutronium < 0 && planet.totalneutronium > 0)
         ? planet['total' + mineral] : planet['ground' + mineral];
@@ -528,8 +530,8 @@
     }
 
     if (planet.nativeclans > 0)
-      html += "<hr/><span class='nativetype'>" + planet.nativeracename + " "
-      + planet.nativegovernmentname + " " + planet.nativetaxrate + "%</span>"
+      html += "<hr/><div class='nativetype'>" + planet.nativeracename + " " + planet.nativegovernmentname
+      + " <span class='raligned'>" + planet.nativetaxrate + "% " + calcTaxesFromNatives() + "</span></div>"
       + "<div class='lval halved natives'>"
       + addCommas(planet.nativeclans * 100) + "</div><div class='lval halved raligned "
       + vgap.getHappyClass(planet.nativehappypoints) + "'>" + planet.nativehappypoints
@@ -554,6 +556,11 @@
     console.log(planet);
 
     return html;
+
+	  function calcTaxesFromNatives() {
+		return Math.round(planet.nativetaxrate * planet.nativeclans
+		* planet.nativegovernment * 0.0002 * ((planet.nativetype == 6) ? 2 : 1));
+	  };
   };
 
   sharedContent.prototype.starbaseScan = function (starbase, showTitle) {
@@ -567,7 +574,7 @@
     + addHullInSpacedockIfAny();
     + "</div>";
     function addTitleIfRequested() {
-      return (!showTitle) ? '' 
+      return (!showTitle) ? ''
       : "<div class='ItemTitle'><div class='sval " + planet.climate + "'>" + planet.temp + "</div>"
         + Math.abs(planet.id) + ": " + planet.name + "</div>";
     }
@@ -584,7 +591,7 @@
       return "<hr/><div class='lval enginetech'>" + starbase.hulltechlevel + "-" + starbase.enginetechlevel + "-" + starbase.beamtechlevel + "-" + starbase.torptechlevel + "</div>";
     }
     function addHullInSpacedockIfAny() {
-      return (!starbase.isbuilding) ? '' 
+      return (!starbase.isbuilding) ? ''
       : "<hr/><hr/><div>" + vgap.getHull(starbase.buildhullid).name + "</div>";
     }
   };
@@ -603,7 +610,7 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
     + addMassAndArmamentDiv()
     + addDamageAndCrewStatusIfNotStandard()
     + addMissionPrimaryEnemyAndFCodeIfOwned();
-    
+
     if (ship.ownerid != vgap.player.id && !vgap.fullallied(ship.ownerid) && !vgap.editmode) {
       html += addRaceNameAndUserName() + addThreatLevel();
     }
@@ -815,20 +822,20 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
 
     vgap.playSound("button");
     vgap.closeMore();
-    
+
     var checkBox = $('#readyCheckBox');
     var oldClass = checkBox.attr('class');
     var currentState = parseInt(oldClass.substring(oldClass.length - 1, oldClass.length));
-    
+
     if (typeof newState === 'undefined') newState = ++currentState % 3;
-    
+
     if (object.isStarbase && !object.isbuilding && newState != 0)
       return alert('Checking a not building SB as Ready is blocked.');
-  
+
     checkBox.removeClass(oldClass);
     object.readystatus = newState;
     checkBox.addClass("readyCheckBox" + newState);
-  
+
     if (newState == 1 && vgap.idleActivated) {
       vgap.showRNav(null, object);
       vgap.refreshLeft();
@@ -837,9 +844,9 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
       vgap.showRNav(null, object);
       vgap.refreshLeft();
       //this.needIndexAdjust = false;
-    }        
+    }
     vgap.loadTasks();
-  
+
     //idle visualization
     if (object.isShip) {
       var planet = vgap.planetAt(object.x, object.y);
@@ -854,9 +861,9 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
         }
       }
     }
-  
+
     vgap.map.draw();
-  
+
     vgap.showTip("readycheck")
   };
 
@@ -890,10 +897,10 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
     this.showAssembly();
     vgap.starbaseScreen.screen.refresh();
   };
-  
+
   /*
 vgapShipScreen.prototype.loadMission = function (ship, planet) {  // vgapShipScreen.prototype.loadMission
-      
+
       console.log(this);
         var ship = this.ship;
         var mission = this.getMission(this.ship.mission);
@@ -1033,7 +1040,7 @@ vgapShipScreen.prototype.loadMission = function (ship, planet) {  // vgapShipScr
 
         this.missionhtml = miss;
 
-        
+
         return "<div class='lval mission'>" + miss + "</div>";
     };
   //*/
