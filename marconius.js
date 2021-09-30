@@ -25,9 +25,7 @@
   addCssRule('span.shipName'
   , 'font-size: 65%;');
   addCssRule('#SelectLocation .lval > span.raligned, span.raligned'
-  , 'position: absolute; left: auto; right: 6px;');
-  addCssRule('.nativetype'
-  , 'font-size: 11px;');
+  , 'left: auto; right: 7px;');
   addCssRule('div.raligned'
   , 'text-align: right;');
   addCssRule('.lval.halved, #SelectLocation .lval.halved'
@@ -530,8 +528,8 @@
     }
 
     if (planet.nativeclans > 0)
-      html += "<hr/><div class='nativetype'>" + planet.nativeracename + " " + planet.nativegovernmentname
-      + " <span class='raligned'>" + planet.nativetaxrate + "% " + calcTaxesFromNatives() + "</span></div>"
+      html += "<hr/><span class='nativetype'>" + planet.nativeracename + " "
+      + planet.nativegovernmentname + " " + planet.nativetaxrate + "% " + calcTaxesFromNatives() + "</span>"
       + "<div class='lval halved natives'>"
       + addCommas(planet.nativeclans * 100) + "</div><div class='lval halved raligned "
       + vgap.getHappyClass(planet.nativehappypoints) + "'>" + planet.nativehappypoints
@@ -816,6 +814,25 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
         return "<div class='ItemSelection " + cls + "' data-id='" + ship.id + "'>"
         + html + '</div>';
       }
+  };
+
+
+  addCssRule('#Friendlybar'
+  , 'left: 210px;');
+
+  vgapPlanetScreen.prototype.loadFriendly = function () {
+    var fcv = this.planet.friendlycode;
+    var fcc = getFriendlyCodeColor(fcv.toUpperCase());
+    return "<div class='vval fcv' style='color:"+ fcc + ";'>" + fcv
+	+ "<span onclick='vgap.planetScreen.randomFC(); event.stopPropagation(); vgap.closeMore();'>randomize</span></div>";
+
+      function getFriendlyCodeColor(fcu) {
+        if (fcu == "NUK" || fcu == "ATT") return "red";
+        if (fcu == "BUM")                 return "orchid";
+        if (fcu == "DMP")                 return "magenta";
+        if (fcu.match(/PB[1-9]/))         return "aqua";
+        return "#fff";
+      };
   };
 
   vgaPlanets.prototype.setReadyCheckBox = function (object, newState) {
