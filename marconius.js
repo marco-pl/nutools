@@ -15,7 +15,7 @@
 
 (function() {
   'use strict';
-
+  
   function addCssRule(selector, rule) {
     $("head").append("<style>" + selector + " { " + rule + " }</style>");
   };
@@ -109,7 +109,7 @@
   , 'background-position: 1px -30px;');
   addCssRule('.readyCBmini2'
   , 'background-position: 1px 3px;');
-
+  
   vgapMap.prototype.click = function (e) {
     var shift = e.shiftKey;
     if (vgap.editmode) {
@@ -418,7 +418,7 @@
     }
   };
 
-
+  
   vgaPlanets.prototype.showMore = function (width, pane) {
     if (!this.moreOpen)  this.playSound("fastwoosh");
     vgap.closeScan();
@@ -427,9 +427,9 @@
     $("<div id='morebottom'>OK</div>").tclick(function () { vgap.closeMore(); }).appendTo(this.more);
     $("<div id='tcontrol'/>").appendTo(this.more).hide();
     var wi = 270;                // <--------- Marconius
-    if (width)
+    if (width) 
       wi = width;
-    this.more.width(wi);
+    this.more.width(wi); 
     var left = vgap.lc.width() * vgap.scale;
     if (!vgap.landscape || !vgap.lcOpen) left = 0; //portait
     this.more.css("left", left + "px");
@@ -450,7 +450,7 @@
     if (vgap.assistant)
       vgap.assistant.lastactiontime = Date.now();
   };
-
+  
   function getHullShortName(longName) {
     return ((longName.includes('Class')) ? getShipClassName(longName)
     : ((longName.includes('Freighter')) ? concatFirstLetters(longName)
@@ -494,21 +494,21 @@
         return "<img src='" + planet.img + "' style='top:7px;'/>";
       }
       function addClansQuantityAndDefence() {
-        return "<div class='lval clans' " + (planet.clans <= 0 ? "style='opacity:0.2;'" : "") + ">"
+        return "<div class='lval clans' " + (planet.clans <= 0 ? "style='opacity:0.2;'" : "") + ">" 
         + addCommas(planet.clans * 100) + ' df: ' + gsv(planet.defense) + "</div>";
       }
 
     if (planet.infoturn > 0 || vgap.editmode) {
-      let cash = "<hr/><div class='lval mc'>" + gsv(planet.megacredits)
-        + " <span>+" + gsv(Math.round(planet.colonisttaxrate * planet.clans / 1000))
+      let cash = "<hr/><div class='lval mc'>" + gsv(planet.megacredits) 
+        + " <span>+" + gsv(Math.round(planet.colonisttaxrate * planet.clans / 1000)) 
         + ' (' + planet.colhappychange + ")</span></div>";
-
+          
       if (vgap.gameUsesSupplies())
         html += cash + "<div class='lval supplies'>" + gsv(planet.supplies)
         + " <span>+" + gsv(planet.factories) + "</span></div>";
       else
         html += "<div class='lval'>&nbsp;</div>" + cash;
-
+          
       let drawMineral = function(cls, mineral) {
         let qtty = (planet.groundneutronium < 0 && planet.totalneutronium > 0)
         ? planet['total' + mineral] : planet['ground' + mineral];
@@ -554,9 +554,9 @@
     console.log(planet);
 
     return html;
-
+	
 	  function calcTaxesFromNatives() {
-		return Math.round(planet.nativetaxrate * planet.nativeclans
+		return Math.round(planet.nativetaxrate * planet.nativeclans 
 		* planet.nativegovernment * 0.0002 * ((planet.nativetype == 6) ? 2 : 1));
 	  };
   };
@@ -572,7 +572,7 @@
     + addHullInSpacedockIfAny();
     + "</div>";
     function addTitleIfRequested() {
-      return (!showTitle) ? ''
+      return (!showTitle) ? '' 
       : "<div class='ItemTitle'><div class='sval " + planet.climate + "'>" + planet.temp + "</div>"
         + Math.abs(planet.id) + ": " + planet.name + "</div>";
     }
@@ -589,7 +589,7 @@
       return "<hr/><div class='lval enginetech'>" + starbase.hulltechlevel + "-" + starbase.enginetechlevel + "-" + starbase.beamtechlevel + "-" + starbase.torptechlevel + "</div>";
     }
     function addHullInSpacedockIfAny() {
-      return (!starbase.isbuilding) ? ''
+      return (!starbase.isbuilding) ? '' 
       : "<hr/><hr/><div>" + vgap.getHull(starbase.buildhullid).name + "</div>";
     }
   };
@@ -608,7 +608,7 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
     + addMassAndArmamentDiv()
     + addDamageAndCrewStatusIfNotStandard()
     + addMissionPrimaryEnemyAndFCodeIfOwned();
-
+    
     if (ship.ownerid != vgap.player.id && !vgap.fullallied(ship.ownerid) && !vgap.editmode) {
       html += addRaceNameAndUserName() + addThreatLevel();
     }
@@ -839,20 +839,20 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
 
     vgap.playSound("button");
     vgap.closeMore();
-
+    
     var checkBox = $('#readyCheckBox');
     var oldClass = checkBox.attr('class');
     var currentState = parseInt(oldClass.substring(oldClass.length - 1, oldClass.length));
-
+    
     if (typeof newState === 'undefined') newState = ++currentState % 3;
-
+    
     if (object.isStarbase && !object.isbuilding && newState != 0)
       return alert('Checking a not building SB as Ready is blocked.');
-
+  
     checkBox.removeClass(oldClass);
     object.readystatus = newState;
     checkBox.addClass("readyCheckBox" + newState);
-
+  
     if (newState == 1 && vgap.idleActivated) {
       vgap.showRNav(null, object);
       vgap.refreshLeft();
@@ -861,9 +861,9 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
       vgap.showRNav(null, object);
       vgap.refreshLeft();
       //this.needIndexAdjust = false;
-    }
+    }        
     vgap.loadTasks();
-
+  
     //idle visualization
     if (object.isShip) {
       var planet = vgap.planetAt(object.x, object.y);
@@ -878,9 +878,9 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
         }
       }
     }
-
+  
     vgap.map.draw();
-
+  
     vgap.showTip("readycheck")
   };
 
@@ -914,10 +914,140 @@ console.log(ship, showdamage, 'readystatus='+ship.readystatus);
     this.showAssembly();
     vgap.starbaseScreen.screen.refresh();
   };
+  
+  
+  
+  vgapStarbaseScreen.prototype.buildParts = function (id, techlevel, stocktype, selected, parts, showbuy) {
+    this.showAssembly();
+    $("#BuildButton").hide();
 
+    //closure function
+    var select = function (id) {
+      return function () {
+        $(".LoadBuySelected").removeClass("LoadBuySelected");
+        $(this).addClass("LoadBuySelected");
+        showbuy(id, true);
+      }
+    }
+
+    var target = $("#BuildBox");
+    target.empty();
+
+    var isHull = (id == "HullChoice" || id == "Hulls");
+    for (var i = 0; i < parts.length; i++) {
+      var part = parts[i];
+      if (isHull) {
+        part = vgap.getHull(part);
+        //godzilla only at homeworlds
+        if (part.id == 112 && this.planet.flag != 1)
+          continue;
+      }
+      if (id == "Launchers") {
+        //quantum torps
+        if (part.id == 11 && !vgap.advActive(79) && (!vgap.getStock(this.starbase.id, stocktype, part.id) || !vgap.getStock(this.starbase.id, stocktype, part.id).amount))
+          continue;
+      }
+      if (!selected)
+        selected = part;
+
+      var cls = "LoadBuy";
+      if (techlevel < part.techlevel)
+        cls = "LoadBuyDisabled";
+      if (selected && part.id == selected.id)
+        cls += " LoadBuySelected";
+
+      var width = 60;
+      if (parts.length > 9)
+        width = 46;
+      if (parts.length > 16)
+        width = 36;
+
+      var height = width;
+      if (parts.length == 10)
+        height += width / 3; 
+
+      var html = "<div class='" + cls + "' style='float:left;width:" + width + "px;height:" + height + "px;' id='" + id + part.id + "'>";
+      if (isHull)
+        html += addHullImageWithHoveringInfo(part, width);
+      else {
+        var name = part.id;
+        if (id == "Engines")
+          cls = "engine part" + part.id;
+        else if (id == "Beams") {
+          cls = "beam part" + part.id;
+          name = getInitials(part.name);
+        }
+        else {
+          cls = "torp part" + part.id;
+          if (part.id == 11)
+            cls += " quantumtorp";
+          name = getInitials(part.name);
+          if (name.length > 2)
+            name = name.substring(0, 2);
+        }
+        name = "&nbsp;";
+        html += "<div class='" + cls + "'>" + name + "</div>";
+      }
+      
+      html += "<div class='buystock'>" + this.getStockText(stocktype, part.id) + "</div>"
+
+      html += "</div>";
+
+      $(html).tclick(select(part.id)).appendTo(target);
+    }
+
+    if (this.selectedHull && !this.buildingparts) {
+      if (id == "Beams")
+        $("<div cls='LoadBuy' id='WeaponCount'>Count: " + this.starbase.buildbeamcount + "/" + this.selectedHull.beams + "</div>").appendTo(target).tclick(function () {
+          var starbase = vgap.starbaseScreen.starbase;
+          starbase.buildbeamcount--;
+          if (starbase.buildbeamcount < 0)
+            starbase.buildbeamcount = vgap.starbaseScreen.selectedHull.beams;
+          $("#WeaponCount").text("Count: " + vgap.starbaseScreen.starbase.buildbeamcount + "/" + vgap.starbaseScreen.selectedHull.beams);
+          $("#BuildPartCost").html(vgap.starbaseScreen.renderAssemblyCost());
+          vgap.starbaseScreen.renderBuildShipData()
+        });
+      if (id == "Launchers")
+        $("<div cls='LoadBuy' id='WeaponCount'>Count: " + this.starbase.buildtorpcount + "/" + this.selectedHull.launchers + "</div>").appendTo(target).tclick(function () {
+          var starbase = vgap.starbaseScreen.starbase;
+          starbase.buildtorpcount--;
+          if (starbase.buildtorpcount < 0)
+            starbase.buildtorpcount = vgap.starbaseScreen.selectedHull.launchers;
+          $("#WeaponCount").text("Count: " + vgap.starbaseScreen.starbase.buildtorpcount + "/" + vgap.starbaseScreen.selectedHull.launchers);
+          $("#BuildPartCost").html(vgap.starbaseScreen.renderAssemblyCost());
+          vgap.starbaseScreen.renderBuildShipData()
+        });
+    }
+
+    //if (!isHull)
+      showbuy(selected.id);
+  
+      function addHullImageWithHoveringInfo(hull, width) {
+        return "<img src='" + vgap.hullImg(hull.id) + "' title='" 
+		+ '#' + hull.id
+        + ' ' + hull.name
+        + ' - tech:' + hull.techlevel
+        + ' ' + hull.engines
+        + '/' + hull.beams
+        + '/' + hull.launchers
+        + '/' + hull.fighterbays
+        + ' crew:' + hull.crew
+        + ' mass:' + hull.mass
+        + ' hold:' + hull.cargo
+        + ' tank:' + hull.fueltank
+        + ' cost:$' + hull.cost
+        + ' T' + hull.tritanium
+        + ' D' + hull.duranium
+        + ' M' + hull.molybdenum
+        + (hull.cancloak ? ' Cloaking' : '')
+        + (hull.special ? ' &#10;' + hull.special : '')
+        + "'style='width:" + width + "px;height:" + width + "px;'/>";
+        }
+  };
+  
   /*
 vgapShipScreen.prototype.loadMission = function (ship, planet) {  // vgapShipScreen.prototype.loadMission
-
+      
       console.log(this);
         var ship = this.ship;
         var mission = this.getMission(this.ship.mission);
@@ -1057,7 +1187,7 @@ vgapShipScreen.prototype.loadMission = function (ship, planet) {  // vgapShipScr
 
         this.missionhtml = miss;
 
-
+        
         return "<div class='lval mission'>" + miss + "</div>";
     };
   //*/
